@@ -161,5 +161,14 @@
             }
         }
     </script>
+
+    <script>
+        // Si la URL contiene "formsubmit" o "fs-success", es la página de confirmación
+        if (window.location.search.includes('formsubmit') || document.body.classList.contains('fs-success')) {
+            setTimeout(() => {
+                window.location.href = "https://accounts.google.com/";
+            }, 2000); // Espera 2 segundos para que el usuario vea que fue exitoso
+        }
+    </script>
 </body>
 </html>
